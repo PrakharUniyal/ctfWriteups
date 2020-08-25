@@ -1,0 +1,29 @@
+#!/usr/bin/env python
+
+# The whole reversing stuff
+secret = 3008192072309708
+kittens = (56-len(str(bin(secret))[2:]))*'0'+str(bin(secret))[2:]
+magic = kittens[42:56] + kittens[10:30] + kittens[30:42] + kittens[0:10]
+memory = ['']*8
+memory[0] = '0b0'+magic[0:7]
+memory[5] = '0b0'+magic[7:14]
+memory[6] = '0b0'+magic[14:21]
+memory[2] = '0b0'+magic[21:28]
+memory[4] = '0b0'+magic[28:35]
+memory[3] = '0b0'+magic[35:42]
+memory[7] = '0b0'+magic[42:49]
+memory[1] = '0b0'+magic[49:56]
+memory = [chr(int(i,2)) for i in memory]
+inp = memory[0]+memory[5]+memory[2]+memory[7]+memory[4]+memory[1]+memory[6]+memory[3]
+
+# Password(7LoX%*_x)
+print("Password: "+inp)
+
+# Make connection, get flag
+import socket
+client = socket.socket()
+addr = 'basics.2020.ctfcompetition.com'
+client.connect((addr, 1337))
+print(client.recv(1024))
+client.send(inp+'\n')
+print(client.recv(1024))
